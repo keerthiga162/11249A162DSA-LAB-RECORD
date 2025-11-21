@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    char exp[100];
+    int stack[100], top = -1;
+    scanf("%s", exp);
+    for (int i = 0; exp[i] != '\0'; i++) {
+        char c = exp[i];
+        if (isdigit(c)) stack[++top] = c - '0';
+        else {
+            int b = stack[top--];
+            int a = stack[top--];
+            int r;
+            if (c == '+') r = a + b;
+            else if (c == '-') r = a - b;
+            else if (c == '*') r = a * b;
+            else if (c == '/') r = a / b;
+            else r = 0;
+            stack[++top] = r;
+        }
+    }
+    printf("%d", stack[top]);
+    return 0;
+}

@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+int enqueue(int q[], int rear, int n, int val) {
+    if (rear == n - 1) return rear;
+    q[++rear] = val;
+    return rear;
+}
+
+int dequeue(int q[], int front, int rear) {
+    if (front > rear) return front;
+    return front + 1;
+}
+
+void display(int q[], int front, int rear) {
+    for (int i = front; i <= rear; i++) printf("%d ", q[i]);
+    printf("\n");
+}
+
+int main() {
+    int q[100], n, front = 0, rear = -1, ch, val;
+    scanf("%d", &n);
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) {
+            scanf("%d", &val);
+            rear = enqueue(q, rear, n, val);
+        } else if (ch == 2) {
+            front = dequeue(q, front, rear);
+        } else if (ch == 3) {
+            display(q, front, rear);
+        } else break;
+    }
+    return 0;
+}

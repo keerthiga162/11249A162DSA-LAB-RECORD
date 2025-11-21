@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int push(int s[], int top, int n, int val) {
+    if (top == n - 1) return top;
+    s[++top] = val;
+    return top;
+}
+
+int pop(int s[], int top) {
+    if (top == -1) return top;
+    return top - 1;
+}
+
+int peek(int s[], int top) {
+    if (top == -1) return -1;
+    return s[top];
+}
+
+void display(int s[], int top) {
+    for (int i = top; i >= 0; i--) printf("%d ", s[i]);
+    printf("\n");
+}
+
+int main() {
+    int s[100], top = -1, n, ch, val;
+    scanf("%d", &n);
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) {
+            scanf("%d", &val);
+            top = push(s, top, n, val);
+        } else if (ch == 2) {
+            top = pop(s, top);
+        } else if (ch == 3) {
+            printf("%d\n", peek(s, top));
+        } else if (ch == 4) {
+            display(s, top);
+        } else break;
+    }
+    return 0;
+}

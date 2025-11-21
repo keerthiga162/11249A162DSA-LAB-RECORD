@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int hash(int key, int size) {
+    return key % size;
+}
+
+void insert(int hashTable[], int size, int key) {
+    int index = hash(key, size);
+    int originalIndex = index;
+    while (hashTable[index] != -1) {
+        index = (index + 1) % size;
+        if (index == originalIndex) return;
+    }
+    hashTable[index] = key;
+}
+
+int search(int hashTable[], int size, int key) {
+    int index = hash(key, size);
+    int originalIndex = index;
+    while (hashTable[index] != -1) {
+        if (hashTable[index] == key) return index;
+        index = (index + 1) % size;
+        if (index == originalIndex) break;
+    }
+    return -1;
+}
+
+void display(int hashTable[], int size) {
+    for (int i = 0; i < size; i++) printf("%d ", hashTable[i]);
+    printf("\n");
+}
+
+int main() {
+    int n, ch, val;
+    scanf("%d", &n);
+    int hashTable[100];
+    for (int i = 0; i < n; i++) hashTable[i] = -1;
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) {
+            scanf("%d", &val);
+            insert(hashTable, n, val);
+        } else if (ch == 2) {
+            scanf("%d", &val);
+            printf("%d\n", search(hashTable, n, val));
+        } else if (ch == 3) {
+            display(hashTable, n);
+        } else break;
+    }
+    return 0;
+}

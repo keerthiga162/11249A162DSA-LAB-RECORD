@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int vertex;
+    struct node* next;
+};
+
+struct Graph {
+    int numVertices;
+    struct node** adjLists;
+    int* visited;
+};
+
+struct node* createNode(int v) {
+    struct node* newNode = malloc(sizeof(struct node));
+    newNode->vertex = v;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct Graph* createGraph(int vertices) {
+    struct Graph* graph = malloc(sizeof(struct Graph));
+    graph->numVertices = vertices;
+    graph->adjLists = malloc(vertices * sizeof(struct node*));
+    graph->visited = malloc(vertices * sizeof(int));
+    for (int i = 0; i < vertices; i++) {
+        graph->adjLists[i] = NULL;
+        graph->visited[i] = 0;
+    }
+    return graph;
+}
+
+void addEdge(struct Graph* graph, int src, int dest) {
+    struct node* newNode = createNode(dest);
+    newNode->next = graph->adjLists[src];
+    graph->adjLists[src] = newNode;
+
+    newNode = createNode(src);
+    newNode->next = graph->adjLists[dest];
+    graph->adjLists[dest] = newNode;
+}
+
+void display(struct Graph* graph) {
+    for (int v = 0; v < graph->numVertices; v++) {
+        struct node* temp = graph->adjLists[v];
+        printf("%d: ", v);
+        while (temp) {
+            printf("%d ", temp->vertex);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+}
+
+void DFS(struct Graph* graph, int vertex) {
+    struct node* adjList = graph->adjLists[vertex];
+    struct node* temp = adjList;
+    graph->visited[vertex] = 1;
+    printf("%d ", vertex);
+    while (temp) {
+        int connectedVertex = temp->vertex;
+        if (!graph->visited[connectedVertex]) DFS(graph, connectedVertex);
+        temp = temp->next;
+    }
+}
+
+void BFS(struct Graph* graph, int startVertex) {
+    int queue[100], front = 0, rear = -1;
+    graph->visited[startVertex] = 1;
+    queue[++rear] = startVertex;
+    while (front <= rear) {
+        int currentVertex = queue[front++];
+        printf("%d ", currentVertex);
+        struct node* temp = graph->adjLists[currentVertex];
+        while (temp) {
+            int adjVertex = temp->vertex;
+            if (!graph->visited[adjVertex]) {
+                queue[++rear] = adjVertex;
+                graph->visited[adjVertex] = 1;
+            }
+            temp = temp->next;
+        }
+    }
+}
+
+int main() {
+    int vertices, edges, src, dest, ch;
+    scanf("%d %d", &vertices, &edges);
+    struct Graph* graph = createGraph(vertices);
+    for (int i = 0; i < edges; i++) {
+        scanf("%d %d", &src, &dest);
+        addEdge(graph, src, dest);
+    }
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) display(graph);
+        else if (ch == 2) {
+            for (int i = 0; i < vertices; i++) graph->visited[i] = 0;
+            DFS(graph, 0);
+            printf("\n");
+        } else if (ch == 3) {
+            for (int i = 0; i < vertices; i++) graph->visited[i] = 0;
+            BFS(graph, 0);
+            printf("\n");
+        } else break;
+    }
+    return 0;
+}

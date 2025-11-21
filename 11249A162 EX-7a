@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node* push(struct node *top, int val) {
+    struct node *t = malloc(sizeof(struct node));
+    t->data = val;
+    t->next = top;
+    return t;
+}
+
+struct node* pop(struct node *top) {
+    if (top == NULL) return top;
+    struct node *t = top;
+    top = top->next;
+    free(t);
+    return top;
+}
+
+int peek(struct node *top) {
+    if (top == NULL) return -1;
+    return top->data;
+}
+
+void display(struct node *top) {
+    while (top) {
+        printf("%d ", top->data);
+        top = top->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct node *top = NULL;
+    int ch, val;
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) {
+            scanf("%d", &val);
+            top = push(top, val);
+        } else if (ch == 2) {
+            top = pop(top);
+        } else if (ch == 3) {
+            printf("%d\n", peek(top));
+        } else if (ch == 4) {
+            display(top);
+        } else break;
+    }
+    return 0;
+}

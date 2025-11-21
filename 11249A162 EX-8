@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *prev;
+    struct node *next;
+};
+
+struct node* insertBegin(struct node *head, int val) {
+    struct node *t = malloc(sizeof(struct node));
+    t->data = val;
+    t->prev = NULL;
+    t->next = head;
+    if (head) head->prev = t;
+    return t;
+}
+
+struct node* insertEnd(struct node *head, int val) {
+    struct node *t = malloc(sizeof(struct node)), *p = head;
+    t->data = val;
+    t->next = NULL;
+    t->prev = NULL;
+    if (!head) return t;
+    while (p->next) p = p->next;
+    p->next = t;
+    t->prev = p;
+    return head;
+}
+
+struct node* deleteVal(struct node *head, int val) {
+    struct node *p = head;
+    while (p && p->data != val) p = p->next;
+    if (!p) return head;
+    if (p->prev) p->prev->next = p->next;
+    else head = p->next;
+    if (p->next) p->next->prev = p->prev;
+    free(p);
+    return head;
+}
+
+int search(struct node *head, int val) {
+    int i = 0;
+    while (head) {
+        if (head->data == val) return i;
+        head = head->next;
+        i++;
+    }
+    return -1;
+}
+
+void displayForward(struct node *head) {
+    while (head) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+void displayBackward(struct node *head) {
+    if (!head) return;
+    while (head->next) head = head->next;
+    while (head) {
+        printf("%d ", head->data);
+        head = head->prev;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct node *head = NULL;
+    int ch, val;
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) {
+            scanf("%d", &val);
+            head = insertBegin(head, val);
+        } else if (ch == 2) {
+            scanf("%d", &val);
+            head = insertEnd(head, val);
+        } else if (ch == 3) {
+            scanf("%d", &val);
+            head = deleteVal(head, val);
+        } else if (ch == 4) {
+            scanf("%d", &val);
+            printf("%d\n", search(head, val));
+        } else if (ch == 5) {
+            displayForward(head);
+        } else if (ch == 6) {
+            displayBackward(head);
+        } else break;
+    }
+    return 0;
+}

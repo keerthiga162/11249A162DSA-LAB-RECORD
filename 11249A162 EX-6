@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node* insertBegin(struct node *head, int val) {
+    struct node *t = malloc(sizeof(struct node));
+    t->data = val;
+    t->next = head;
+    return t;
+}
+
+struct node* insertEnd(struct node *head, int val) {
+    struct node *t = malloc(sizeof(struct node)), *p = head;
+    t->data = val;
+    t->next = NULL;
+    if (head == NULL) return t;
+    while (p->next) p = p->next;
+    p->next = t;
+    return head;
+}
+
+struct node* deleteVal(struct node *head, int val) {
+    if (head == NULL) return head;
+    if (head->data == val) {
+        struct node *t = head;
+        head = head->next;
+        free(t);
+        return head;
+    }
+    struct node *p = head;
+    while (p->next && p->next->data != val) p = p->next;
+    if (p->next) {
+        struct node *t = p->next;
+        p->next = t->next;
+        free(t);
+    }
+    return head;
+}
+
+int search(struct node *head, int val) {
+    int i = 0;
+    while (head) {
+        if (head->data == val) return i;
+        head = head->next;
+        i++;
+    }
+    return -1;
+}
+
+void display(struct node *head) {
+    while (head) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct node *head = NULL;
+    int ch, val;
+    while (1) {
+        scanf("%d", &ch);
+        if (ch == 1) {
+            scanf("%d", &val);
+            head = insertBegin(head, val);
+        } else if (ch == 2) {
+            scanf("%d", &val);
+            head = insertEnd(head, val);
+        } else if (ch == 3) {
+            scanf("%d", &val);
+            head = deleteVal(head, val);
+        } else if (ch == 4) {
+            scanf("%d", &val);
+            printf("%d\n", search(head, val));
+        } else if (ch == 5) {
+            display(head);
+        } else break;
+    }
+    return 0;
+}
